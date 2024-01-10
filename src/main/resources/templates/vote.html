@@ -1,0 +1,35 @@
+<div class="card my-3">
+    <div class="card-body">
+        <div class="my-3">
+            <a href="#" class="recommend btn btn-sm btn-outline-secondary" data-vote-id="${vote.id}">
+                추천
+                <span id="recommend_vote_count_${vote.id}" class="badge rounded-pill bg-success"></span>
+            </a>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.recommend').on('click', function (event) {
+            event.preventDefault();
+
+            var voteId = $(this).data('vote-id');
+            increaseRecommendation(voteId);
+        });
+
+        function increaseRecommendation(voteId) {
+            $.ajax({
+                url: '/vote/' + voteId,
+                type: 'POST',
+                success: function (data) {
+                    var currentCount = parseInt($('#recommend_vote_count_' + voteId).text() || 0);
+                    $('#recommend_vote_count_' + voteId).text(currentCount + 1);
+                },
+                error: function (err) {
+                    console.error('에러:', err);
+                }
+            });
+        }
+    });
+</script>
